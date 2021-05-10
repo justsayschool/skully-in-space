@@ -17,10 +17,23 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . c c c c c c c c c c c c . . 
         . . . . c c c c c c c c . . . . 
         `, mySprite, 150, 0)
+    while (controller.A.isPressed()) {
+        pause(700)
+    }
+})
+sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
+    health.destroy()
+    info.changeLifeBy(1)
+})
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeScoreBy(1)
+    otherSprite.destroy(effects.fire, 500)
+    sprite.destroy()
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    otherSprite.follow(sprite, 100)
     animation.runImageAnimation(
-    enemySprite,
+    otherSprite,
     [img`
         .................ccfff..............
         ................cdd55f..............
@@ -124,17 +137,21 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
         ........ccccccf5d555fcc..........fff
         ...............ffffff...............
         `],
-    100,
+    50,
     false
     )
-    enemySprite.follow(mySprite, 100)
-    pause(1000)
-    enemySprite.destroy()
+    pause(500)
+    scene.cameraShake(4, 500)
+    info.changeLifeBy(-1)
+    otherSprite.destroy()
 })
 let enemySprite: Sprite = null
+let health: Sprite = null
 let projectile: Sprite = null
 let mySprite: Sprite = null
 effects.starField.startScreenEffect()
+info.setLife(2)
+info.setScore(0)
 mySprite = sprites.create(img`
     ........................
     ........................
@@ -163,7 +180,7 @@ mySprite = sprites.create(img`
     `, SpriteKind.Player)
 controller.moveSprite(mySprite)
 mySprite.setStayInScreen(true)
-game.onUpdateInterval(5000, function () {
+game.onUpdateInterval(1000, function () {
     enemySprite = sprites.create(img`
         .............ccfff..............
         ............cdd55f..............
@@ -182,7 +199,9 @@ game.onUpdateInterval(5000, function () {
         .......cccccf5d55fc.............
         .............fffff..............
         `, SpriteKind.Enemy)
-    mySprite.x = 0
+    enemySprite.x = scene.screenWidth()
+    enemySprite.vx = -70
+    enemySprite.y = randint(10, scene.screenHeight() - 10)
     animation.runImageAnimation(
     enemySprite,
     [img`
@@ -257,4 +276,27 @@ game.onUpdateInterval(5000, function () {
     500,
     true
     )
+})
+game.onUpdateInterval(10000, function () {
+    health = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . b b b b . . . . . . 
+        . . . . b b 3 3 3 3 b b . . . . 
+        . . . b c b 3 3 3 3 b c b . . . 
+        . . . b b c 3 3 3 3 c b b . . . 
+        . . b 3 3 3 c 3 3 c 3 3 3 b . . 
+        . . b 3 3 3 3 c c 3 3 3 3 b . . 
+        . . b 3 3 3 c 3 3 c 3 3 3 b . . 
+        . . . b b c 3 3 3 3 c b b . . . 
+        . . . b c b 3 3 3 3 b c b . . . 
+        . . . . b b 3 3 3 3 b b . . . . 
+        . . . . . . b b b b . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Food)
+    health.x = scene.screenWidth()
+    health.vx = -90
+    health.y = randint(10, scene.screenHeight() - 10)
 })
