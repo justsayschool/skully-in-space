@@ -28,9 +28,55 @@ sprites.onOverlap(SpriteKind.fragment, SpriteKind.Player, function (sprite, othe
     fragmentsprite.destroy()
     info.changeScoreBy(20)
 })
+info.onCountdownEnd(function () {
+    game.setDialogTextColor(3)
+    game.setDialogFrame(img`
+        3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
+        `)
+    game.setDialogCursor(assets.image`myImage`)
+    game.showLongText("YOU DID IT SKULLY! I'm so happy you're alive! Now get back here I need you for an experiment. ", DialogLayout.Full)
+    game.over(true)
+})
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     health.destroy()
     info.changeLifeBy(1)
+})
+info.onLifeZero(function () {
+    game.setDialogTextColor(3)
+    game.setDialogFrame(img`
+        3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 f f f f f f f f f f f f f 3 
+        3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
+        `)
+    game.setDialogCursor(assets.image`myImage`)
+    game.showLongText("So you've gone and gotten yourself eaten. Well you're in luck! When someone is eaten by a spaceshark during a frenzy they are sent back to the beginning of the frenzy! So why don't you go and give it another try.", DialogLayout.Full)
+    game.over(false)
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     info.changeScoreBy(1)
@@ -176,27 +222,11 @@ game.setDialogFrame(img`
     3 f f f f f f f f f f f f f 3 
     3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
     `)
-game.setDialogCursor(img`
-    . . . . . . . . . . . c c . . . 
-    . . . . . . . c c c c 6 3 c . . 
-    . . . . . . c 6 3 3 3 3 6 c . . 
-    . . c c . c 6 c c 3 3 3 3 3 c . 
-    . b 5 5 c 6 c 5 5 c 3 3 3 3 3 c 
-    . f f 5 c 6 c 5 f f 3 3 3 3 3 c 
-    . f f 5 c 6 c 5 f f 6 3 3 3 c c 
-    . b 5 5 3 c 3 5 5 c 6 6 6 6 c c 
-    . . b 5 5 3 5 5 c 3 3 3 3 3 3 c 
-    . c c 5 5 5 5 5 b c c 3 3 3 3 c 
-    c 5 5 4 5 5 5 4 b 5 5 c 3 3 c . 
-    b 5 4 b 4 4 4 4 b b 5 c b b . . 
-    c 4 5 5 b 4 b 5 5 5 4 c 4 5 b . 
-    c 5 5 5 c 4 c 5 5 5 c 4 c 5 c . 
-    c 5 5 5 5 c 5 5 5 5 c 4 c 5 c . 
-    . c c c c c c c c c . . c c c . 
-    `)
-game.showLongText("", DialogLayout.Full)
-info.setLife(2)
+game.setDialogCursor(assets.image`myImage`)
+game.showLongText("Harry the Hermit Crab: Skully I have no idea how you got yourself into this one but, you are about to fly through a 2 minute spaceshark frenzy!! Use your fireballs to destroy them and hopefully you'll make it out alive. While you're at it collect as many fragments as you can since I need those for my research. Also I heard space pomegranates float through that area so eat those if you're feeling a bit hurt. Good luck and try not to get eaten you still owe me $5.", DialogLayout.Full)
+info.setLife(1)
 info.setScore(0)
+info.startCountdown(120)
 mySprite = sprites.create(img`
     ........................
     ........................
@@ -244,11 +274,108 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.fragment)
+    animation.runImageAnimation(
+    fragmentsprite,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . b c 3 b . . . . . . 
+        . . . . b b c b f 3 b . . . . . 
+        . . . . 3 f c c c 3 b . . . . . 
+        . . . . 3 f f c 3 f b b . . . . 
+        . . . . b c c 3 f f b . . . . . 
+        . . . . . c c 3 f 3 . . . . . . 
+        . . . . . . b c c . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . b 3 3 b . . . . . 
+        . . . . . . c c f f b . . . . . 
+        . . . . . b c c f c c b . . . . 
+        . . . . . c 3 3 c c b c . . . . 
+        . . . . . c f f 3 c f 3 . . . . 
+        . . . . . . 3 f f 3 3 b . . . . 
+        . . . . . . . b b b b . . . . . 
+        . . . . . . . . b . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . c c b . . . . . . 
+        . . . . . . 3 f 3 c c . . . . . 
+        . . . . . b f f 3 c c b . . . . 
+        . . . . b b f 3 c f f 3 . . . . 
+        . . . . . b 3 c c c f 3 . . . . 
+        . . . . . b 3 f b c b b . . . . 
+        . . . . . . b 3 c b . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . b . . . . . . . . 
+        . . . . . b b b b . . . . . . . 
+        . . . . b 3 3 f f 3 . . . . . . 
+        . . . . 3 f c 3 f f c . . . . . 
+        . . . . c b c c 3 3 c . . . . . 
+        . . . . b c c f c c b . . . . . 
+        . . . . . b f f c c . . . . . . 
+        . . . . . b 3 3 b . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `],
+    100,
+    true
+    )
     fragmentsprite.x = scene.screenWidth()
     fragmentsprite.vx = -100
     fragmentsprite.y = randint(10, scene.screenHeight() - 10)
 })
-game.onUpdateInterval(800, function () {
+game.onUpdateInterval(15000, function () {
+    health = sprites.create(img`
+        . . . . . . . . . . c . . . . . 
+        . . . . . . . . . c . . . . . . 
+        . . . . . . b b c b . . . . . . 
+        . . . . b b c c c c b b . . . . 
+        . . . b c c c 3 3 c c c b . . . 
+        . . . b c c 3 c c 3 c c b . . . 
+        . . b c 3 3 c 3 3 c 3 3 c b . . 
+        . . b 3 c c 3 c c 3 c c 3 b . . 
+        . . b c 3 3 c c c c 3 3 c b . . 
+        . . . b 3 c 3 c c 3 c 3 b . . . 
+        . . . b c 3 c 3 3 c 3 c b . . . 
+        . . . . b b 3 c c 3 b b . . . . 
+        . . . . . . b b b b . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Food)
+    health.x = scene.screenWidth()
+    health.vx = -90
+    health.y = randint(10, scene.screenHeight() - 10)
+})
+game.onUpdateInterval(900, function () {
     enemySprite = sprites.create(img`
         .............ccfff..............
         ............cdd55f..............
@@ -344,27 +471,4 @@ game.onUpdateInterval(800, function () {
     500,
     true
     )
-})
-game.onUpdateInterval(10000, function () {
-    health = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . b b b b . . . . . . 
-        . . . . b b 3 3 3 3 b b . . . . 
-        . . . b c b 3 3 3 3 b c b . . . 
-        . . . b b c 3 3 3 3 c b b . . . 
-        . . b 3 3 3 c 3 3 c 3 3 3 b . . 
-        . . b 3 3 3 3 c c 3 3 3 3 b . . 
-        . . b 3 3 3 c 3 3 c 3 3 3 b . . 
-        . . . b b c 3 3 3 3 c b b . . . 
-        . . . b c b 3 3 3 3 b c b . . . 
-        . . . . b b 3 3 3 3 b b . . . . 
-        . . . . . . b b b b . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Food)
-    health.x = scene.screenWidth()
-    health.vx = -90
-    health.y = randint(10, scene.screenHeight() - 10)
 })
