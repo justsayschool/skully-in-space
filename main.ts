@@ -2,23 +2,24 @@ namespace SpriteKind {
     export const fragment = SpriteKind.create()
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    music.thump.play()
     projectile = sprites.createProjectileFromSprite(img`
-        . . . . c c c c c c c c . . . . 
-        . . c c c c c c c c c c c c . . 
-        . c c c b b b b b b b b c c c . 
-        . c c b b b 3 3 3 3 b b b c c . 
-        c c b b b 3 3 3 3 3 3 b b b c c 
-        c c b b 3 3 3 3 3 3 3 3 b b c c 
-        c c b 3 3 3 3 d d 3 3 3 3 b c c 
-        c c b 3 3 3 d d d d 3 3 3 b c c 
-        c c b 3 3 3 d d d d 3 3 3 b c c 
-        c c b 3 3 3 3 d d 3 3 3 3 b c c 
-        c c b b 3 3 3 3 3 3 3 3 b b c c 
-        c c b b b 3 3 3 3 3 3 b b b c c 
-        . c c b b b 3 3 3 3 b b b c c . 
-        . c c c b b b b b b b b c c c . 
-        . . c c c c c c c c c c c c . . 
-        . . . . c c c c c c c c . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . c c c c c . . . . . . 
+        . . . . c c b b b c c . . . . . 
+        . . . c c b 3 3 3 b c c . . . . 
+        . . . c b 3 d d d 3 b c . . . . 
+        . . . c b 3 d d d 3 b c . . . . 
+        . . . c b 3 d d d 3 b c . . . . 
+        . . . c c b 3 3 3 b c c . . . . 
+        . . . . c c b b b c c . . . . . 
+        . . . . . c c c c c . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
         `, mySprite, 150, 0)
     while (controller.A.isPressed()) {
         pause(200)
@@ -26,6 +27,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 sprites.onOverlap(SpriteKind.fragment, SpriteKind.Player, function (sprite, otherSprite) {
     fragmentsprite.destroy()
+    music.knock.play()
     info.changeScoreBy(20)
 })
 info.onCountdownEnd(function () {
@@ -53,9 +55,11 @@ info.onCountdownEnd(function () {
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     health.destroy()
+    music.powerUp.play()
     info.changeLifeBy(1)
 })
 info.onLifeZero(function () {
+    music.powerDown.play()
     game.setDialogTextColor(3)
     game.setDialogFrame(img`
         3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
@@ -80,6 +84,7 @@ info.onLifeZero(function () {
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     info.changeScoreBy(1)
+    music.thump.play()
     otherSprite.destroy(effects.fire, 500)
     sprite.destroy()
 })
@@ -194,6 +199,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     false
     )
     pause(500)
+    music.smallCrash.play()
     scene.cameraShake(4, 500)
     info.changeLifeBy(-1)
     otherSprite.destroy()
@@ -372,7 +378,7 @@ game.onUpdateInterval(15000, function () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Food)
     health.x = scene.screenWidth()
-    health.vx = -90
+    health.vx = -100
     health.y = randint(10, scene.screenHeight() - 10)
 })
 game.onUpdateInterval(900, function () {
@@ -395,7 +401,7 @@ game.onUpdateInterval(900, function () {
         .............fffff..............
         `, SpriteKind.Enemy)
     enemySprite.x = scene.screenWidth()
-    enemySprite.vx = -70
+    enemySprite.vx = -75
     enemySprite.y = randint(10, scene.screenHeight() - 10)
     animation.runImageAnimation(
     enemySprite,
