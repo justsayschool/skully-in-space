@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const fragment = SpriteKind.create()
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     projectile = sprites.createProjectileFromSprite(img`
         . . . . c c c c c c c c . . . . 
@@ -18,8 +21,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . c c c c c c c c . . . . 
         `, mySprite, 150, 0)
     while (controller.A.isPressed()) {
-        pause(700)
+        pause(200)
     }
+})
+sprites.onOverlap(SpriteKind.fragment, SpriteKind.Player, function (sprite, otherSprite) {
+    fragmentsprite.destroy()
+    info.changeScoreBy(20)
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Player, function (sprite, otherSprite) {
     health.destroy()
@@ -147,9 +154,47 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 })
 let enemySprite: Sprite = null
 let health: Sprite = null
+let fragmentsprite: Sprite = null
 let projectile: Sprite = null
 let mySprite: Sprite = null
 effects.starField.startScreenEffect()
+game.setDialogTextColor(3)
+game.setDialogFrame(img`
+    3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 f f f f f f f f f f f f f 3 
+    3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
+    `)
+game.setDialogCursor(img`
+    . . . . . . . . . . . c c . . . 
+    . . . . . . . c c c c 6 3 c . . 
+    . . . . . . c 6 3 3 3 3 6 c . . 
+    . . c c . c 6 c c 3 3 3 3 3 c . 
+    . b 5 5 c 6 c 5 5 c 3 3 3 3 3 c 
+    . f f 5 c 6 c 5 f f 3 3 3 3 3 c 
+    . f f 5 c 6 c 5 f f 6 3 3 3 c c 
+    . b 5 5 3 c 3 5 5 c 6 6 6 6 c c 
+    . . b 5 5 3 5 5 c 3 3 3 3 3 3 c 
+    . c c 5 5 5 5 5 b c c 3 3 3 3 c 
+    c 5 5 4 5 5 5 4 b 5 5 c 3 3 c . 
+    b 5 4 b 4 4 4 4 b b 5 c b b . . 
+    c 4 5 5 b 4 b 5 5 5 4 c 4 5 b . 
+    c 5 5 5 c 4 c 5 5 5 c 4 c 5 c . 
+    c 5 5 5 5 c 5 5 5 5 c 4 c 5 c . 
+    . c c c c c c c c c . . c c c . 
+    `)
+game.showLongText("", DialogLayout.Full)
 info.setLife(2)
 info.setScore(0)
 mySprite = sprites.create(img`
@@ -180,7 +225,30 @@ mySprite = sprites.create(img`
     `, SpriteKind.Player)
 controller.moveSprite(mySprite)
 mySprite.setStayInScreen(true)
-game.onUpdateInterval(1000, function () {
+game.onUpdateInterval(5000, function () {
+    fragmentsprite = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . b c 3 b . . . . . . 
+        . . . . b b c b f 3 b . . . . . 
+        . . . . 3 f c c c 3 b . . . . . 
+        . . . . 3 f f c 3 f b b . . . . 
+        . . . . b c c 3 f f b . . . . . 
+        . . . . . c c 3 f 3 . . . . . . 
+        . . . . . . b c c . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.fragment)
+    fragmentsprite.x = scene.screenWidth()
+    fragmentsprite.vx = -100
+    fragmentsprite.y = randint(10, scene.screenHeight() - 10)
+})
+game.onUpdateInterval(800, function () {
     enemySprite = sprites.create(img`
         .............ccfff..............
         ............cdd55f..............
