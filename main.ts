@@ -229,7 +229,7 @@ game.setDialogFrame(img`
     3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
     `)
 game.setDialogCursor(assets.image`myImage`)
-game.showLongText("Harry the Hermit Crab: Skully I have no idea how you got yourself into this one but, you are about to fly through a 2 minute spaceshark frenzy!! Use your fireballs to destroy them and hopefully you'll make it out alive. While you're at it collect as many fragments as you can since I need those for my research. Also I heard space pomegranates float through that area so eat those if you're feeling a bit hurt. Good luck and try not to get eaten you still owe me $5.", DialogLayout.Full)
+game.showLongText("Harry the Hermit Crab: Skully I have no idea how you got yourself into this one but, you are about to fly through a 2 minute spaceshark frenzy!! Use your fireballs to destroy them and hopefully you'll make it out alive. While you're at it collect as many fragments as you can since I need those for my research. Also I heard space pomegranates float through that area so eat those if you're feeling a bit hurt. Good luck and try not to get eaten you still owe me $5.                                 (use W A S D to move and SPACE to shoot)", DialogLayout.Full)
 info.setLife(1)
 info.setScore(0)
 info.startCountdown(120)
